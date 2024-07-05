@@ -1,13 +1,13 @@
 package com.nadiannis.payment_service.service;
 
-import com.nadiannis.payment_service.dto.AmountUpdateReqDto;
+import com.nadiannis.common.dto.AmountUpdateReqDto;
 import com.nadiannis.payment_service.dto.BalanceReqDto;
-import com.nadiannis.payment_service.dto.BalanceResDto;
+import com.nadiannis.common.dto.BalanceResDto;
 import com.nadiannis.payment_service.entity.Balance;
 import com.nadiannis.common.exception.ResourceInsufficientException;
 import com.nadiannis.common.exception.ResourceNotFoundException;
 import com.nadiannis.payment_service.repository.BalanceRepository;
-import com.nadiannis.payment_service.utils.Action;
+import com.nadiannis.common.utils.AmountUpdateAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -47,13 +47,13 @@ public class BalanceService {
 
         return balanceMono
                 .flatMap(balance -> {
-                    if (amountUpdateReqDto.getAction().toUpperCase().equals(Action.DEBIT.toString())) {
+                    if (amountUpdateReqDto.getAction().toUpperCase().equals(AmountUpdateAction.DEBIT.toString())) {
                         if (balance.getAmount() >= amountUpdateReqDto.getAmount()) {
                             balance.setAmount(balance.getAmount() - amountUpdateReqDto.getAmount());
                         } else {
                             return Mono.error(new ResourceInsufficientException("balance", "amount"));
                         }
-                    } else if (amountUpdateReqDto.getAction().toUpperCase().equals(Action.CREDIT.toString())) {
+                    } else if (amountUpdateReqDto.getAction().toUpperCase().equals(AmountUpdateAction.CREDIT.toString())) {
                         balance.setAmount(balance.getAmount() + amountUpdateReqDto.getAmount());
                     }
                     return repository.save(balance);

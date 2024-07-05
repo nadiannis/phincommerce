@@ -1,6 +1,6 @@
-package com.nadiannis.payment_service.dto;
+package com.nadiannis.common.dto;
 
-import com.nadiannis.payment_service.utils.validation.ValidAction;
+import com.nadiannis.common.utils.validation.ValidAmountUpdateAction;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class AmountUpdateReqDto {
 
     @NotBlank(message = "action is required")
-    @ValidAction
+    @ValidAmountUpdateAction
     private String action;
 
     @NotNull(message = "amount is required")

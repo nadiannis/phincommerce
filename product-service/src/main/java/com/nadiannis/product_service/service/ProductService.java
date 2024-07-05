@@ -1,93 +1,26 @@
 package com.nadiannis.product_service.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nadiannis.common.dto.MessageDto;
 import com.nadiannis.product_service.dto.ProductReqDto;
-import com.nadiannis.product_service.dto.ProductResDto;
-import com.nadiannis.product_service.dto.QuantityUpdateReqDto;
+import com.nadiannis.common.dto.ProductResDto;
+import com.nadiannis.common.dto.QuantityUpdateReqDto;
 import com.nadiannis.product_service.entity.Product;
 import com.nadiannis.common.exception.ResourceInsufficientException;
 import com.nadiannis.common.exception.ResourceNotFoundException;
 import com.nadiannis.product_service.repository.ProductRepository;
-import com.nadiannis.product_service.utils.Action;
+import com.nadiannis.common.utils.QuantityUpdateAction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
 
     private ProductRepository repository;
 
-    private KafkaTemplate<String, Object> kafkaTemplate;
-
-    private ObjectMapper objectMapper;
-
     @Autowired
-    public ProductService(ProductRepository repository, KafkaTemplate kafkaTemplate, ObjectMapper objectMapper) {
+    public ProductService(ProductRepository repository) {
         this.repository = repository;
-        this.kafkaTemplate = kafkaTemplate;
-        this.objectMapper = objectMapper;
-    }
-
-    @KafkaListener(topics = "product", groupId = "phincommerce")
-    public void handleProductDeduct(String message) throws JsonProcessingException {
-        MessageDto messageDto = objectMapper.readValue(message, MessageDto.class);
-
-        if (messageDto.getStatus().equals("ORDER_CREATED")) {
-            System.out.println("ORDER_CREATED (deduct the product):" + messageDto);
-
-            List<Mono<ProductResDto>> updateMonos = messageDto.getPayload().getOrderItems().stream()
-                    .map(orderItemResDto -> updateQuantity(
-                            orderItemResDto.getProductId(),
-                            QuantityUpdateReqDto.builder()
-                                    .stockQuantity(orderItemResDto.getQuantity())
-                                    .action("DEDUCT")
-                                    .build()
-                    ))
-                    .collect(Collectors.toList());
-
-            Mono.when(updateMonos)
-                    .then(Mono.defer(() -> Mono.fromFuture(() -> kafkaTemplate.send("orchestrator", MessageDto.builder()
-                            .status("PRODUCT_DEDUCTED")
-                            .payload(messageDto.getPayload())
-                            .build()))))
-                    .onErrorResume(error -> Mono.fromFuture(() -> kafkaTemplate.send("orchestrator", MessageDto.builder()
-                            .status("PRODUCT_DEDUCTED_FAILED")
-                            .payload(messageDto.getPayload())
-                            .build())))
-                    .subscribe();
-        } else if (messageDto.getStatus().equals("PAYMENT_REJECTED")) {
-            System.out.println("PAYMENT_REJECTED (add the product):" + messageDto);
-
-            List<Mono<ProductResDto>> updateMonos = messageDto.getPayload().getOrderItems().stream()
-                    .map(orderItemResDto -> updateQuantity(
-                            orderItemResDto.getProductId(),
-                            QuantityUpdateReqDto.builder()
-                                    .stockQuantity(orderItemResDto.getQuantity())
-                                    .action("ADD")
-                                    .build()
-                    ))
-                    .collect(Collectors.toList());
-
-            Mono.when(updateMonos)
-                    .then(Mono.defer(() -> Mono.fromFuture(() -> kafkaTemplate.send("orchestrator", MessageDto.builder()
-                            .status("PRODUCT_ADDED")
-                            .payload(messageDto.getPayload())
-                            .build()))))
-                    .onErrorResume(error -> Mono.fromFuture(() -> kafkaTemplate.send("orchestrator", MessageDto.builder()
-                            .status("PRODUCT_ADD_FAILED")
-                            .payload(messageDto.getPayload())
-                            .build())))
-                    .subscribe();
-        }
     }
 
     public Flux<ProductResDto> getAll() {
@@ -136,13 +69,13 @@ public class ProductService {
 
         return productMono
                 .flatMap(product -> {
-                    if (quantityUpdateReqDto.getAction().toUpperCase().equals(Action.DEDUCT.toString())) {
+                    if (quantityUpdateReqDto.getAction().toUpperCase().equals(QuantityUpdateAction.DEDUCT.toString())) {
                         if (product.getStockQuantity() >= quantityUpdateReqDto.getStockQuantity()) {
                             product.setStockQuantity(product.getStockQuantity() - quantityUpdateReqDto.getStockQuantity());
                         } else {
                             return Mono.error(new ResourceInsufficientException("product", "quantity"));
                         }
-                    } else if (quantityUpdateReqDto.getAction().toUpperCase().equals(Action.ADD.toString())) {
+                    } else if (quantityUpdateReqDto.getAction().toUpperCase().equals(QuantityUpdateAction.ADD.toString())) {
                         product.setStockQuantity(product.getStockQuantity() + quantityUpdateReqDto.getStockQuantity());
                     }
                     return repository.save(product);

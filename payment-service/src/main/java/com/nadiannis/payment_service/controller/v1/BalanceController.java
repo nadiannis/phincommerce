@@ -1,9 +1,9 @@
 package com.nadiannis.payment_service.controller.v1;
 
-import com.nadiannis.payment_service.dto.AmountUpdateReqDto;
+import com.nadiannis.common.dto.AmountUpdateReqDto;
 import com.nadiannis.payment_service.dto.BalanceReqDto;
-import com.nadiannis.payment_service.dto.BalanceResDto;
-import com.nadiannis.payment_service.dto.SuccessResponse;
+import com.nadiannis.common.dto.BalanceResDto;
+import com.nadiannis.common.dto.SuccessResponse;
 import com.nadiannis.payment_service.service.BalanceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

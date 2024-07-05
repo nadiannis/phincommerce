@@ -1,7 +1,7 @@
-package com.nadiannis.product_service.dto;
+package com.nadiannis.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nadiannis.product_service.utils.validation.ValidAction;
+import com.nadiannis.common.utils.validation.ValidQuantityUpdateAction;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class QuantityUpdateReqDto {
 
     @NotBlank(message = "action is required")
-    @ValidAction
+    @ValidQuantityUpdateAction
     private String action;
 
     @NotNull(message = "stock_quantity is required")

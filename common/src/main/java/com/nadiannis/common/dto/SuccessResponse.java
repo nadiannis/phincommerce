@@ -1,4 +1,4 @@
-package com.nadiannis.order_service.dto;
+package com.nadiannis.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;

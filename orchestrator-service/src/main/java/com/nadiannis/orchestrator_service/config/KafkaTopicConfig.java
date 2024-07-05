@@ -13,19 +13,4 @@ public class KafkaTopicConfig {
         return TopicBuilder.name("orchestrator").build();
     }
 
-    @Bean
-    public NewTopic ProductTopic() {
-        return TopicBuilder.name("product").build();
-    }
-
-    @Bean
-    public NewTopic PaymentTopic() {
-        return TopicBuilder.name("payment").build();
-    }
-
-    @Bean
-    public NewTopic OrderTopic() {
-        return TopicBuilder.name("order").build();
-    }
-
 }

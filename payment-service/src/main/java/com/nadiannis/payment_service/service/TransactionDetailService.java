@@ -1,17 +1,11 @@
 package com.nadiannis.payment_service.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nadiannis.common.dto.MessageDto;
-import com.nadiannis.payment_service.dto.AmountUpdateReqDto;
 import com.nadiannis.payment_service.dto.TransactionDetailReqDto;
 import com.nadiannis.payment_service.dto.TransactionDetailResDto;
 import com.nadiannis.payment_service.entity.TransactionDetail;
 import com.nadiannis.common.exception.ResourceNotFoundException;
 import com.nadiannis.payment_service.repository.TransactionDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -25,68 +19,14 @@ public class TransactionDetailService {
 
     private BalanceService balanceService;
 
-    private KafkaTemplate<String, Object> kafkaTemplate;
-
-    private ObjectMapper objectMapper;
-
     @Autowired
-    public TransactionDetailService(TransactionDetailRepository repository, BalanceService balanceService, KafkaTemplate<String, Object> kafkaTemplate, ObjectMapper objectMapper) {
+    public TransactionDetailService(TransactionDetailRepository repository, BalanceService balanceService) {
         this.repository = repository;
         this.balanceService = balanceService;
-        this.kafkaTemplate = kafkaTemplate;
-        this.objectMapper = objectMapper;
     }
 
     public Flux<TransactionDetailResDto> getAll() {
         return repository.findAll().map(transactionDetail -> mapToResDto(transactionDetail));
-    }
-
-    @KafkaListener(topics = "payment", groupId = "phincommerce")
-    public void handlePayment(String message) throws JsonProcessingException {
-        MessageDto messageDto = objectMapper.readValue(message, MessageDto.class);
-
-        if (messageDto.getStatus().equals("PRODUCT_DEDUCTED")) {
-            System.out.println("PRODUCT_DEDUCTED (process the payment): " + messageDto);
-            processPayment(messageDto);
-        }
-    }
-
-    private void processPayment(MessageDto messageDto) {
-        Long customerId = messageDto.getPayload().getCustomerId();
-        Float totalAmount = messageDto.getPayload().getTotalAmount();
-
-        balanceService.updateAmount(customerId, AmountUpdateReqDto.builder().action("DEBIT").amount(totalAmount).build())
-                .flatMap(balanceResDto -> {
-                    TransactionDetailReqDto transactionDetailReqDto = TransactionDetailReqDto.builder()
-                            .orderId(messageDto.getPayload().getId())
-                            .amount(totalAmount)
-                            .mode(messageDto.getPayload().getPaymentMethod())
-                            .status("APPROVED")
-                            .build();
-
-                    return add(transactionDetailReqDto);
-                }).doOnSuccess(transactionDetailResDto -> {
-                    kafkaTemplate.send("orchestrator", MessageDto.builder()
-                            .status("PAYMENT_APPROVED")
-                            .payload(messageDto.getPayload())
-                            .build());
-                })
-                .onErrorResume(error -> {
-                    TransactionDetailReqDto transactionDetailReqDto = TransactionDetailReqDto.builder()
-                            .orderId(messageDto.getPayload().getId())
-                            .amount(totalAmount)
-                            .mode(messageDto.getPayload().getPaymentMethod())
-                            .status("REJECTED")
-                            .build();
-
-                    return add(transactionDetailReqDto).doOnSuccess(transactionDetailResDto -> {
-                        kafkaTemplate.send("orchestrator", MessageDto.builder()
-                                .status("PAYMENT_REJECTED")
-                                .payload(messageDto.getPayload())
-                                .build());
-                    });
-                })
-                .subscribe();
     }
 
     public Mono<TransactionDetailResDto> add(TransactionDetailReqDto transactionDetailReqDto) {

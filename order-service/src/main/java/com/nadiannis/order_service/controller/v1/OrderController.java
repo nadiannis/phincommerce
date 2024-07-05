@@ -3,7 +3,7 @@ package com.nadiannis.order_service.controller.v1;
 import com.nadiannis.order_service.dto.OrderReqDto;
 import com.nadiannis.common.dto.OrderResDto;
 import com.nadiannis.order_service.dto.StatusUpdateReqDto;
-import com.nadiannis.order_service.dto.SuccessResponse;
+import com.nadiannis.common.dto.SuccessResponse;
 import com.nadiannis.order_service.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

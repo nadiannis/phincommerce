@@ -2,7 +2,7 @@ package com.nadiannis.product_service.exception;
 
 import com.nadiannis.common.exception.ResourceInsufficientException;
 import com.nadiannis.common.exception.ResourceNotFoundException;
-import com.nadiannis.product_service.dto.ErrorResponse;
+import com.nadiannis.common.dto.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;

@@ -1,6 +1,6 @@
 package com.nadiannis.payment_service.controller.v1;
 
-import com.nadiannis.payment_service.dto.SuccessResponse;
+import com.nadiannis.common.dto.SuccessResponse;
 import com.nadiannis.payment_service.dto.TransactionDetailReqDto;
 import com.nadiannis.payment_service.dto.TransactionDetailResDto;
 import com.nadiannis.payment_service.service.TransactionDetailService;

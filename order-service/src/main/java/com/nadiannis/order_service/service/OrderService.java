@@ -54,19 +54,16 @@ public class OrderService {
         });
     }
 
-    @KafkaListener(topics = "order", groupId = "phincommerce")
+    @KafkaListener(topics = "orchestrator", groupId = "phincommerce")
     public void handleStatusUpdate(String message) throws JsonProcessingException {
         MessageDto messageDto = objectMapper.readValue(message, MessageDto.class);
 
         if (messageDto.getStatus().equals("PRODUCT_DEDUCTED_FAILED")) {
             System.out.println("PRODUCT_DEDUCTED_FAILED (complete the order):" + messageDto);
-            completeOrder(messageDto, "FAILED");
         } else if (messageDto.getStatus().equals("PAYMENT_APPROVED")) {
             System.out.println("PAYMENT_APPROVED (complete the order):" + messageDto);
-            completeOrder(messageDto, "COMPLETED");
         } else if (messageDto.getStatus().equals("PAYMENT_REJECTED")) {
             System.out.println("PAYMENT_REJECTED (complete the order):" + messageDto);
-            completeOrder(messageDto, "FAILED");
         }
     }
 

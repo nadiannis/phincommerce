@@ -1,13 +1,13 @@
-package com.nadiannis.payment_service.utils.validation;
+package com.nadiannis.common.utils.validation;
 
-import com.nadiannis.payment_service.utils.Action;
+import com.nadiannis.common.utils.QuantityUpdateAction;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class ActionValidator implements ConstraintValidator<ValidAction, String> {
+public class QuantityUpdateActionValidator implements ConstraintValidator<ValidQuantityUpdateAction, String> {
 
     @Override
-    public void initialize(ValidAction constraintAnnotation) {
+    public void initialize(ValidQuantityUpdateAction constraintAnnotation) {
     }
 
     @Override
@@ -17,7 +17,7 @@ public class ActionValidator implements ConstraintValidator<ValidAction, String>
         }
 
         try {
-            Action.valueOf(value.toUpperCase());
+            QuantityUpdateAction.valueOf(value.toUpperCase());
             return true;
         } catch (IllegalArgumentException e) {
             return false;
