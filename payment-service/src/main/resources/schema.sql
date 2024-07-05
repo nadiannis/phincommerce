@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS transaction_details (
+    id BIGSERIAL PRIMARY KEY,
+    order_id BIGINT NOT NULL,
+    amount FLOAT8 NOT NULL,
+    mode VARCHAR(255) NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    reference_number VARCHAR(255) NOT NULL,
+    payment_date TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS balances (
+    id BIGSERIAL PRIMARY KEY,
+    amount FLOAT8 NOT NULL,
+    customer_id BIGINT NOT NULL UNIQUE
+);
