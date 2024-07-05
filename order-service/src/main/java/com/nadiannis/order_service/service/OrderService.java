@@ -54,18 +54,18 @@ public class OrderService {
         });
     }
 
-    @KafkaListener(topics = "orchestrator", groupId = "phincommerce")
-    public void handleStatusUpdate(String message) throws JsonProcessingException {
-        MessageDto messageDto = objectMapper.readValue(message, MessageDto.class);
-
-        if (messageDto.getStatus().equals("PRODUCT_DEDUCTED_FAILED")) {
-            System.out.println("PRODUCT_DEDUCTED_FAILED (complete the order):" + messageDto);
-        } else if (messageDto.getStatus().equals("PAYMENT_APPROVED")) {
-            System.out.println("PAYMENT_APPROVED (complete the order):" + messageDto);
-        } else if (messageDto.getStatus().equals("PAYMENT_REJECTED")) {
-            System.out.println("PAYMENT_REJECTED (complete the order):" + messageDto);
-        }
-    }
+//    @KafkaListener(topics = "orchestrator", groupId = "phincommerce")
+//    public void handleStatusUpdate(String message) throws JsonProcessingException {
+//        MessageDto messageDto = objectMapper.readValue(message, MessageDto.class);
+//
+//        if (messageDto.getStatus().equals("PRODUCT_DEDUCTED_FAILED")) {
+//            System.out.println("PRODUCT_DEDUCTED_FAILED (complete the order):" + messageDto);
+//        } else if (messageDto.getStatus().equals("PAYMENT_APPROVED")) {
+//            System.out.println("PAYMENT_APPROVED (complete the order):" + messageDto);
+//        } else if (messageDto.getStatus().equals("PAYMENT_REJECTED")) {
+//            System.out.println("PAYMENT_REJECTED (complete the order):" + messageDto);
+//        }
+//    }
 
     private void completeOrder(MessageDto messageDto, String status) {
         Long orderId = messageDto.getPayload().getId();
