@@ -29,14 +29,14 @@ public class TransactionDetailRepositoryTests {
                 .orderId(1L)
                 .amount(100000F)
                 .mode("CASH")
-                .status("CREATED")
+                .status("APPROVED")
                 .referenceNumber(UUID.randomUUID().toString())
                 .build();
         transactionDetail2 = TransactionDetail.builder()
                 .orderId(2L)
                 .amount(200000F)
                 .mode("BANK_TRANSFER")
-                .status("COMPLETED")
+                .status("REJECTED")
                 .referenceNumber(UUID.randomUUID().toString())
                 .build();
     }
