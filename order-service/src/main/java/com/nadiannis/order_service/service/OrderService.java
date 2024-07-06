@@ -42,18 +42,6 @@ public class OrderService {
         this.objectMapper = objectMapper;
     }
 
-    public Flux<OrderResDto> getAll() {
-        return orderRepository.findAll().flatMap(order -> {
-            return orderItemRepository.findByOrderId(order.getId())
-                    .collectList()
-                    .map(orderItems -> {
-                        OrderResDto orderResDto = mapToOrderResDto(order);
-                        orderResDto.setOrderItems(orderItems.stream().map(this::mapToOrderItemResDto).collect(Collectors.toList()));
-                        return orderResDto;
-                    });
-        });
-    }
-
     @KafkaListener(topics = "order", groupId = "phincommerce")
     public void handleStatusUpdate(String message) throws JsonProcessingException {
         MessageDto messageDto = objectMapper.readValue(message, MessageDto.class);
@@ -78,6 +66,18 @@ public class OrderService {
                 orderResDto -> System.out.println("Order status updated successfully to: " + status),
                 error -> System.out.println("Failed to update order status: " + error.getMessage())
         );
+    }
+
+    public Flux<OrderResDto> getAll() {
+        return orderRepository.findAll().flatMap(order -> {
+            return orderItemRepository.findByOrderId(order.getId())
+                    .collectList()
+                    .map(orderItems -> {
+                        OrderResDto orderResDto = mapToOrderResDto(order);
+                        orderResDto.setOrderItems(orderItems.stream().map(this::mapToOrderItemResDto).collect(Collectors.toList()));
+                        return orderResDto;
+                    });
+        });
     }
 
     public Mono<OrderResDto> add(OrderReqDto orderReqDto) {

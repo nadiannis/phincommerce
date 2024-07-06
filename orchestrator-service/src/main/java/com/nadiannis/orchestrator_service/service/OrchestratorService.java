@@ -50,7 +50,7 @@ public class OrchestratorService {
                         if (results.contains(false)) {
                             System.out.println("PRODUCT_DEDUCT_FAILED (update the order status)");
                             sendOrderMessage(messageDto, "PRODUCT_DEDUCT_FAILED");
-                            return null;
+                            return Mono.empty();
                         } else {
                             System.out.println("PRODUCT_DEDUCTED (process to payment)");
                             return processPayment(messageDto);
