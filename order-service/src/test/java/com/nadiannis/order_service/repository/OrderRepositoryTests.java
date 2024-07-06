@@ -40,6 +40,8 @@ public class OrderRepositoryTests {
                 .totalAmount(200000F)
                 .customerId(2L)
                 .build();
+
+        repository.deleteAll().block();
     }
 
     // Flux<Order> findAll()

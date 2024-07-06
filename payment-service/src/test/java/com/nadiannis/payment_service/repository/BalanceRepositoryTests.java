@@ -1,7 +1,6 @@
 package com.nadiannis.payment_service.repository;
 
 import com.nadiannis.payment_service.entity.Balance;
-import com.nadiannis.payment_service.entity.TransactionDetail;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.List;
-import java.util.UUID;
 
 @DataR2dbcTest
 public class BalanceRepositoryTests {
@@ -34,6 +32,8 @@ public class BalanceRepositoryTests {
                 .amount(2000000F)
                 .customerId(2L)
                 .build();
+
+        repository.deleteAll().block();
     }
 
     // Flux<Balance> findAll()

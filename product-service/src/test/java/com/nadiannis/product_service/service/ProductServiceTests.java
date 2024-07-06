@@ -134,12 +134,12 @@ public class ProductServiceTests {
                 .assertNext(updatedProduct -> {
                     Assertions.assertThat(updatedProduct).isNotNull();
                     Assertions.assertThat(updatedProduct.getId()).isEqualTo(productId);
-                    Assertions.assertThat(updatedProduct.getName()).isEqualTo(product1.getName());
-                    Assertions.assertThat(updatedProduct.getPrice()).isEqualTo(product1.getPrice());
-                    Assertions.assertThat(updatedProduct.getCategory()).isEqualTo(product1.getCategory());
-                    Assertions.assertThat(updatedProduct.getStockQuantity()).isEqualTo(product1.getStockQuantity());
-                    Assertions.assertThat(updatedProduct.getDescription()).isEqualTo(product1.getDescription());
-                    Assertions.assertThat(updatedProduct.getImageUrl()).isEqualTo(product1.getImageUrl());
+                    Assertions.assertThat(updatedProduct.getName()).isEqualTo(productReqDto.getName());
+                    Assertions.assertThat(updatedProduct.getPrice()).isEqualTo(productReqDto.getPrice());
+                    Assertions.assertThat(updatedProduct.getCategory()).isEqualTo(productReqDto.getCategory());
+                    Assertions.assertThat(updatedProduct.getStockQuantity()).isEqualTo(productReqDto.getStockQuantity());
+                    Assertions.assertThat(updatedProduct.getDescription()).isEqualTo(productReqDto.getDescription());
+                    Assertions.assertThat(updatedProduct.getImageUrl()).isEqualTo(productReqDto.getImageUrl());
                 })
                 .verifyComplete();
 

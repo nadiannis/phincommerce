@@ -39,6 +39,8 @@ public class TransactionDetailRepositoryTests {
                 .status("REJECTED")
                 .referenceNumber(UUID.randomUUID().toString())
                 .build();
+
+        repository.deleteAll().block();
     }
 
     // Flux<TransactionDetail> findAll()

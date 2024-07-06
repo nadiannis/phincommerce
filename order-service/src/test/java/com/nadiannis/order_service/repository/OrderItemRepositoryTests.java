@@ -50,6 +50,9 @@ public class OrderItemRepositoryTests {
                 .totalAmount(100000F)
                 .customerId(1L)
                 .build();
+
+        orderRepository.deleteAll().block();
+        orderItemRepository.deleteAll().block();
     }
 
     // Flux<OrderItem> findAll()

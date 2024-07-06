@@ -4,20 +4,13 @@ import com.nadiannis.product_service.entity.Product;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DataR2dbcTest
 public class ProductRepositoryTests {
@@ -47,6 +40,8 @@ public class ProductRepositoryTests {
                 .description("description 2")
                 .imageUrl("https://images.pexels.com/photos/26110304/pexels-photo-26110304/free-photo-of-parkschloss-leipzig.jpeg")
                 .build();
+
+        repository.deleteAll().block();
     }
 
     // Flux<Product> findAll()
