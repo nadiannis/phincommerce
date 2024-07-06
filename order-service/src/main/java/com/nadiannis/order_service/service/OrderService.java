@@ -47,13 +47,13 @@ public class OrderService {
         MessageDto messageDto = objectMapper.readValue(message, MessageDto.class);
 
         if (messageDto.getStatus().equals("PRODUCT_DEDUCT_FAILED")) {
-            System.out.println("PRODUCT_DEDUCT_FAILED (complete the order):" + messageDto);
+            System.out.println("PRODUCT_DEDUCT_FAILED (complete the order): " + messageDto);
             updateOrderStatus(messageDto, "FAILED");
         } else if (messageDto.getStatus().equals("PAYMENT_APPROVED")) {
-            System.out.println("PAYMENT_APPROVED (complete the order):" + messageDto);
+            System.out.println("PAYMENT_APPROVED (complete the order): " + messageDto);
             updateOrderStatus(messageDto, "COMPLETED");
         } else if (messageDto.getStatus().equals("PAYMENT_REJECTED")) {
-            System.out.println("PAYMENT_REJECTED (complete the order):" + messageDto);
+            System.out.println("PAYMENT_REJECTED (complete the order): " + messageDto);
             updateOrderStatus(messageDto, "FAILED");
         }
     }

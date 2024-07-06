@@ -17,6 +17,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Service
 public class OrchestratorService {
 
@@ -65,8 +67,8 @@ public class OrchestratorService {
                 .uri("/api/v1/products/{id}/quantities", orderItemResDto.getProductId())
                 .bodyValue(new QuantityUpdateReqDto("DEDUCT", orderItemResDto.getQuantity()))
                 .retrieve()
-                .bodyToMono(ProductResDto.class)
-                .map(product -> true)
+                .bodyToMono(new ParameterizedTypeReference<SuccessResponse<ProductResDto>>() {})
+                .map(productResDto -> true)
                 .onErrorResume(error -> Mono.just(false));
     }
 
@@ -82,17 +84,37 @@ public class OrchestratorService {
                 .bodyValue(transactionDetailAddReqDto)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<SuccessResponse<TransactionDetailResDto>>() {})
-                .doOnNext(resDto -> {
-                    System.out.println("AFTER PAYMENT: " + resDto.getData());
+                .flatMap(resDto -> {
                     if (resDto.getData().getStatus().equals("APPROVED")) {
                         System.out.println("PAYMENT_APPROVED (update the order status): " + resDto.getData());
                         sendOrderMessage(messageDto, "PAYMENT_APPROVED");
+                        return Mono.empty();
                     } else if (resDto.getData().getStatus().equals("REJECTED")) {
-                        System.out.println("PAYMENT_REJECTED (update the order status): " + resDto.getData());
-                        sendOrderMessage(messageDto, "PAYMENT_REJECTED");
+                        System.out.println("PAYMENT_REJECTED (add the product): " + resDto.getData());
+                        return addProducts(messageDto.getPayload().getOrderItems())
+                                .then(Mono.fromRunnable(() -> {
+                                    System.out.println("PAYMENT_REJECTED (update the order status): " + resDto.getData());
+                                    sendOrderMessage(messageDto, "PAYMENT_REJECTED");
+                                }));
                     }
-                })
+                    return Mono.empty();
+                });
+    }
+
+    private Mono<Void> addProducts(List<OrderItemResDto> orderItemResDtoList) {
+        return Flux.fromIterable(orderItemResDtoList)
+                .flatMap(orderItem -> addProductQuantity(orderItem))
                 .then();
+    }
+
+    private Mono<Boolean> addProductQuantity(OrderItemResDto orderItemResDto) {
+        return webClientProduct.patch()
+                .uri("/api/v1/products/{id}/quantities", orderItemResDto.getProductId())
+                .bodyValue(new QuantityUpdateReqDto("ADD", orderItemResDto.getQuantity()))
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<SuccessResponse<ProductResDto>>() {})
+                .map(productResDto -> true)
+                .onErrorResume(error -> Mono.just(false));
     }
 
     private void sendOrderMessage(MessageDto messageDto, String status) {
