@@ -1,13 +1,13 @@
-package com.nadiannis.payment_service.utils.validation;
+package com.nadiannis.common.utils.validation;
 
-import com.nadiannis.payment_service.utils.Status;
+import com.nadiannis.common.utils.Mode;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class StatusValidator implements ConstraintValidator<ValidStatus, String> {
+public class ModeValidator implements ConstraintValidator<ValidMode, String> {
 
     @Override
-    public void initialize(ValidStatus constraintAnnotation) {
+    public void initialize(ValidMode constraintAnnotation) {
     }
 
     @Override
@@ -17,7 +17,7 @@ public class StatusValidator implements ConstraintValidator<ValidStatus, String>
         }
 
         try {
-            Status.valueOf(value.toUpperCase());
+            Mode.valueOf(value.toUpperCase());
             return true;
         } catch (IllegalArgumentException e) {
             return false;

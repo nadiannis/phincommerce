@@ -1,8 +1,9 @@
 package com.nadiannis.payment_service.controller.v1;
 
 import com.nadiannis.common.dto.SuccessResponse;
-import com.nadiannis.payment_service.dto.TransactionDetailReqDto;
-import com.nadiannis.payment_service.dto.TransactionDetailResDto;
+import com.nadiannis.common.dto.TransactionDetailAddReqDto;
+import com.nadiannis.common.dto.TransactionDetailResDto;
+import com.nadiannis.payment_service.dto.TransactionDetailUpdateReqDto;
 import com.nadiannis.payment_service.service.TransactionDetailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -49,7 +50,7 @@ public class TransactionDetailController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @PostMapping
-    public Mono<ResponseEntity<?>> add(@Valid @RequestBody TransactionDetailReqDto body) {
+    public Mono<ResponseEntity<?>> add(@Valid @RequestBody TransactionDetailAddReqDto body) {
         return service.add(body).map(data -> {
             String message = "transaction added successfully";
 
@@ -80,7 +81,7 @@ public class TransactionDetailController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @PutMapping("/{id}")
-    public Mono<ResponseEntity<?>> update(@PathVariable Long id, @Valid @RequestBody TransactionDetailReqDto body) {
+    public Mono<ResponseEntity<?>> update(@PathVariable Long id, @Valid @RequestBody TransactionDetailUpdateReqDto body) {
         return service.update(id, body).map(data -> {
             String message = "transaction updated successfully";
 

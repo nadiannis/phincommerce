@@ -13,4 +13,9 @@ public class KafkaTopicConfig {
         return TopicBuilder.name("orchestrator").build();
     }
 
+    @Bean
+    public NewTopic OrderTopic() {
+        return TopicBuilder.name("order").build();
+    }
+
 }

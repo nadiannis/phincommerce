@@ -1,4 +1,4 @@
-package com.nadiannis.payment_service.utils;
+package com.nadiannis.common.utils;
 
 public enum Mode {
     CASH,

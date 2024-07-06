@@ -1,7 +1,9 @@
 package com.nadiannis.payment_service.service;
 
-import com.nadiannis.payment_service.dto.TransactionDetailReqDto;
-import com.nadiannis.payment_service.dto.TransactionDetailResDto;
+import com.nadiannis.common.dto.AmountUpdateReqDto;
+import com.nadiannis.common.dto.TransactionDetailAddReqDto;
+import com.nadiannis.common.dto.TransactionDetailResDto;
+import com.nadiannis.payment_service.dto.TransactionDetailUpdateReqDto;
 import com.nadiannis.payment_service.entity.TransactionDetail;
 import com.nadiannis.common.exception.ResourceNotFoundException;
 import com.nadiannis.payment_service.repository.TransactionDetailRepository;
@@ -29,10 +31,24 @@ public class TransactionDetailService {
         return repository.findAll().map(transactionDetail -> mapToResDto(transactionDetail));
     }
 
-    public Mono<TransactionDetailResDto> add(TransactionDetailReqDto transactionDetailReqDto) {
-        TransactionDetail transactionDetail = mapToEntity(transactionDetailReqDto);
-        transactionDetail.setReferenceNumber(UUID.randomUUID().toString());
-        return repository.save(transactionDetail).map(newTransactionDetail -> mapToResDto(newTransactionDetail));
+    public Mono<TransactionDetailResDto> add(TransactionDetailAddReqDto transactionDetailAddReqDto) {
+        return balanceService.updateAmount(
+                transactionDetailAddReqDto.getCustomerId(),
+                AmountUpdateReqDto.builder()
+                        .action("DEBIT")
+                        .amount(transactionDetailAddReqDto.getAmount())
+                        .build()
+        ).flatMap(balanceResDto -> {
+            TransactionDetail transactionDetail = mapFromAddReqDtoToEntity(transactionDetailAddReqDto);
+            transactionDetail.setReferenceNumber(UUID.randomUUID().toString());
+            transactionDetail.setStatus("APPROVED");
+            return repository.save(transactionDetail).map(newTransactionDetail -> mapToResDto(newTransactionDetail));
+        }).onErrorResume(error -> {
+            TransactionDetail transactionDetail = mapFromAddReqDtoToEntity(transactionDetailAddReqDto);
+            transactionDetail.setReferenceNumber(UUID.randomUUID().toString());
+            transactionDetail.setStatus("REJECTED");
+            return repository.save(transactionDetail).map(newTransactionDetail -> mapToResDto(newTransactionDetail));
+        });
     }
 
     public Mono<TransactionDetailResDto> getById(Long id) {
@@ -43,19 +59,21 @@ public class TransactionDetailService {
         return transactionDetailMono.map(transactionDetail -> mapToResDto(transactionDetail));
     }
 
-    public Mono<TransactionDetailResDto> update(Long id, TransactionDetailReqDto transactionDetailReqDto) {
+    public Mono<TransactionDetailResDto> update(Long id, TransactionDetailUpdateReqDto transactionDetailUpdateReqDto) {
         Mono<TransactionDetail> transactionDetailMono = repository
                 .findById(id)
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("transaction", "id", Long.toString(id))));
 
         return transactionDetailMono
                 .flatMap(transactionDetail -> {
-                    transactionDetail.setOrderId(transactionDetailReqDto.getOrderId());
-                    transactionDetail.setAmount(transactionDetailReqDto.getAmount());
-                    transactionDetail.setMode(transactionDetailReqDto.getMode().toUpperCase());
-                    transactionDetail.setStatus(transactionDetailReqDto.getStatus().toUpperCase());
-                    if (transactionDetailReqDto.getReferenceNumber() != null) {
-                        transactionDetail.setReferenceNumber(transactionDetailReqDto.getReferenceNumber());
+                    transactionDetail.setOrderId(transactionDetailUpdateReqDto.getOrderId());
+                    transactionDetail.setAmount(transactionDetailUpdateReqDto.getAmount());
+                    transactionDetail.setMode(transactionDetailUpdateReqDto.getMode().toUpperCase());
+                    if (transactionDetailUpdateReqDto.getStatus() != null) {
+                        transactionDetail.setStatus(transactionDetailUpdateReqDto.getStatus().toUpperCase());
+                    }
+                    if (transactionDetailUpdateReqDto.getReferenceNumber() != null) {
+                        transactionDetail.setReferenceNumber(transactionDetailUpdateReqDto.getReferenceNumber());
                     }
                     return repository.save(transactionDetail);
                 })
@@ -82,13 +100,11 @@ public class TransactionDetailService {
         return transactionDetailResDto;
     }
 
-    private TransactionDetail mapToEntity(TransactionDetailReqDto transactionDetailReqDto) {
+    private TransactionDetail mapFromAddReqDtoToEntity(TransactionDetailAddReqDto transactionDetailAddReqDto) {
         TransactionDetail transactionDetail = new TransactionDetail();
-        transactionDetail.setOrderId(transactionDetailReqDto.getOrderId());
-        transactionDetail.setAmount(transactionDetailReqDto.getAmount());
-        transactionDetail.setMode(transactionDetailReqDto.getMode().toUpperCase());
-        transactionDetail.setStatus(transactionDetailReqDto.getStatus().toUpperCase());
-        transactionDetail.setReferenceNumber(transactionDetailReqDto.getReferenceNumber());
+        transactionDetail.setOrderId(transactionDetailAddReqDto.getOrderId());
+        transactionDetail.setAmount(transactionDetailAddReqDto.getAmount());
+        transactionDetail.setMode(transactionDetailAddReqDto.getMode().toUpperCase());
         return transactionDetail;
     }
 
