@@ -1,7 +1,7 @@
 package com.nadiannis.order_service.controller.v1;
 
 import com.nadiannis.order_service.dto.OrderReqDto;
-import com.nadiannis.common.dto.OrderResDto;
+import com.nadiannis.common.dto.order.OrderResDto;
 import com.nadiannis.order_service.dto.StatusUpdateReqDto;
 import com.nadiannis.common.dto.SuccessResponse;
 import com.nadiannis.order_service.service.OrderService;

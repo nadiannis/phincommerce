@@ -1,4 +1,4 @@
-package com.nadiannis.common.dto;
+package com.nadiannis.common.dto.balance;
 
 import com.nadiannis.common.utils.validation.ValidAmountUpdateAction;
 import jakarta.validation.constraints.Min;

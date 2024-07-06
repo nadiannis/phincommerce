@@ -1,8 +1,8 @@
 package com.nadiannis.payment_service.service;
 
-import com.nadiannis.common.dto.AmountUpdateReqDto;
-import com.nadiannis.common.dto.TransactionDetailAddReqDto;
-import com.nadiannis.common.dto.TransactionDetailResDto;
+import com.nadiannis.common.dto.balance.AmountUpdateReqDto;
+import com.nadiannis.common.dto.transactiondetail.TransactionDetailAddReqDto;
+import com.nadiannis.common.dto.transactiondetail.TransactionDetailResDto;
 import com.nadiannis.payment_service.dto.TransactionDetailUpdateReqDto;
 import com.nadiannis.payment_service.entity.TransactionDetail;
 import com.nadiannis.common.exception.ResourceNotFoundException;

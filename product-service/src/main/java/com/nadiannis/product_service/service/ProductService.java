@@ -1,8 +1,8 @@
 package com.nadiannis.product_service.service;
 
 import com.nadiannis.product_service.dto.ProductReqDto;
-import com.nadiannis.common.dto.ProductResDto;
-import com.nadiannis.common.dto.QuantityUpdateReqDto;
+import com.nadiannis.common.dto.product.ProductResDto;
+import com.nadiannis.common.dto.product.QuantityUpdateReqDto;
 import com.nadiannis.product_service.entity.Product;
 import com.nadiannis.common.exception.ResourceInsufficientException;
 import com.nadiannis.common.exception.ResourceNotFoundException;

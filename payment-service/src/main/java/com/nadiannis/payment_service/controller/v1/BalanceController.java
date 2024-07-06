@@ -1,8 +1,8 @@
 package com.nadiannis.payment_service.controller.v1;
 
-import com.nadiannis.common.dto.AmountUpdateReqDto;
+import com.nadiannis.common.dto.balance.AmountUpdateReqDto;
 import com.nadiannis.payment_service.dto.BalanceReqDto;
-import com.nadiannis.common.dto.BalanceResDto;
+import com.nadiannis.common.dto.balance.BalanceResDto;
 import com.nadiannis.common.dto.SuccessResponse;
 import com.nadiannis.payment_service.service.BalanceService;
 import io.swagger.v3.oas.annotations.Operation;

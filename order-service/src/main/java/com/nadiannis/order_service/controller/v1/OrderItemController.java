@@ -1,6 +1,6 @@
 package com.nadiannis.order_service.controller.v1;
 
-import com.nadiannis.common.dto.OrderItemResDto;
+import com.nadiannis.common.dto.order.OrderItemResDto;
 import com.nadiannis.common.dto.SuccessResponse;
 import com.nadiannis.order_service.service.OrderItemService;
 import io.swagger.v3.oas.annotations.Operation;

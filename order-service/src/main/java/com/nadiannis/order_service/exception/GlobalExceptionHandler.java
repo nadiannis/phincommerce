@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.nadiannis.order_service.utils.Strings.camelToSnake;
+import static com.nadiannis.common.utils.Strings.camelToSnake;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {

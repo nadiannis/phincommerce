@@ -1,8 +1,8 @@
 package com.nadiannis.payment_service.controller.v1;
 
 import com.nadiannis.common.dto.SuccessResponse;
-import com.nadiannis.common.dto.TransactionDetailAddReqDto;
-import com.nadiannis.common.dto.TransactionDetailResDto;
+import com.nadiannis.common.dto.transactiondetail.TransactionDetailAddReqDto;
+import com.nadiannis.common.dto.transactiondetail.TransactionDetailResDto;
 import com.nadiannis.payment_service.dto.TransactionDetailUpdateReqDto;
 import com.nadiannis.payment_service.service.TransactionDetailService;
 import io.swagger.v3.oas.annotations.Operation;

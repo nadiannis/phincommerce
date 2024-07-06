@@ -1,5 +1,6 @@
 package com.nadiannis.common.dto;
 
+import com.nadiannis.common.dto.order.OrderResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

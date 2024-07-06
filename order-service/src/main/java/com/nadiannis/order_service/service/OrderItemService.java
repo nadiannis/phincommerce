@@ -1,6 +1,6 @@
 package com.nadiannis.order_service.service;
 
-import com.nadiannis.common.dto.OrderItemResDto;
+import com.nadiannis.common.dto.order.OrderItemResDto;
 import com.nadiannis.order_service.entity.OrderItem;
 import com.nadiannis.order_service.repository.OrderItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;

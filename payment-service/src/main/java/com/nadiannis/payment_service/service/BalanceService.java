@@ -1,8 +1,8 @@
 package com.nadiannis.payment_service.service;
 
-import com.nadiannis.common.dto.AmountUpdateReqDto;
+import com.nadiannis.common.dto.balance.AmountUpdateReqDto;
 import com.nadiannis.payment_service.dto.BalanceReqDto;
-import com.nadiannis.common.dto.BalanceResDto;
+import com.nadiannis.common.dto.balance.BalanceResDto;
 import com.nadiannis.payment_service.entity.Balance;
 import com.nadiannis.common.exception.ResourceInsufficientException;
 import com.nadiannis.common.exception.ResourceNotFoundException;

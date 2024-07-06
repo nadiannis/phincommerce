@@ -1,8 +1,8 @@
 package com.nadiannis.product_service.controller.v1;
 
 import com.nadiannis.product_service.dto.ProductReqDto;
-import com.nadiannis.common.dto.ProductResDto;
-import com.nadiannis.common.dto.QuantityUpdateReqDto;
+import com.nadiannis.common.dto.product.ProductResDto;
+import com.nadiannis.common.dto.product.QuantityUpdateReqDto;
 import com.nadiannis.common.dto.SuccessResponse;
 import com.nadiannis.product_service.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -15,22 +15,16 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 public class OrderItemResDto {
 
-    @Id
     private Long id;
 
     @JsonProperty(value = "order_id")
     private Long orderId;
 
-    @NotNull(message = "product_id is required")
     @JsonProperty(value = "product_id")
     private Long productId;
 
-    @NotNull(message = "price is required")
-    @Min(value = 0, message = "price should not be a negative number")
     private Float price;
 
-    @NotNull(message = "quantity is required")
-    @Min(value = 0, message = "quantity should not be a negative number")
     private Integer quantity;
 
 }

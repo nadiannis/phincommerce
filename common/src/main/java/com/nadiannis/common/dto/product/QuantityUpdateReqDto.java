@@ -1,4 +1,4 @@
-package com.nadiannis.common.dto;
+package com.nadiannis.common.dto.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nadiannis.common.utils.validation.ValidQuantityUpdateAction;
