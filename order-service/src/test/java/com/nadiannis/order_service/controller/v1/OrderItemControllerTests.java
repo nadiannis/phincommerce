@@ -44,14 +44,14 @@ public class OrderItemControllerTests {
                 .id(1L)
                 .orderId(1L)
                 .productId(2L)
-                .price(100000F)
+                .price(100000.0)
                 .quantity(10)
                 .build();
         orderItemResDto2 = OrderItemResDto.builder()
                 .id(2L)
                 .orderId(2L)
                 .productId(2L)
-                .price(100000F)
+                .price(100000.0)
                 .quantity(5)
                 .build();
     }

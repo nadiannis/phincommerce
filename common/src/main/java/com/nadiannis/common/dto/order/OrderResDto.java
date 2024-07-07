@@ -30,7 +30,7 @@ public class OrderResDto {
     private String orderStatus;
 
     @JsonProperty(value = "total_amount")
-    private Float totalAmount;
+    private Double totalAmount;
 
     @JsonProperty(value = "customer_id")
     private Long customerId;

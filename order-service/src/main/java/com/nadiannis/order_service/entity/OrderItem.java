@@ -21,7 +21,7 @@ public class OrderItem {
 
     private Long productId;
 
-    private Float price;
+    private Double price;
 
     private Integer quantity;
 

@@ -20,7 +20,7 @@ public class OrderItemReqDto {
 
     @NotNull(message = "price is required")
     @Min(value = 0, message = "price should not be a negative number")
-    private Float price;
+    private Double price;
 
     @NotNull(message = "quantity is required")
     @Min(value = 0, message = "quantity should not be a negative number")

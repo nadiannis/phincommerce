@@ -84,7 +84,7 @@ public class OrderService {
         if (orderReqDto.getOrderItems() == null) {
             orderReqDto.setOrderItems(Collections.emptyList());
         }
-        Float totalAmount = (float) orderReqDto.getOrderItems().stream()
+        Double totalAmount = orderReqDto.getOrderItems().stream()
                 .mapToDouble(orderItemReqDto -> orderItemReqDto.getPrice() * orderItemReqDto.getQuantity())
                 .sum();
 

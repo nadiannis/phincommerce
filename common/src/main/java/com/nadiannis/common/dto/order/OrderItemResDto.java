@@ -20,7 +20,7 @@ public class OrderItemResDto {
     @JsonProperty(value = "product_id")
     private Long productId;
 
-    private Float price;
+    private Double price;
 
     private Integer quantity;
 

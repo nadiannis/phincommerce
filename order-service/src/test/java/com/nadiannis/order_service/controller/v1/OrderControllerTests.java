@@ -5,9 +5,6 @@ import com.nadiannis.common.dto.order.OrderResDto;
 import com.nadiannis.order_service.dto.OrderItemReqDto;
 import com.nadiannis.order_service.dto.OrderReqDto;
 import com.nadiannis.order_service.dto.StatusUpdateReqDto;
-import com.nadiannis.order_service.entity.Order;
-import com.nadiannis.order_service.entity.OrderItem;
-import com.nadiannis.order_service.service.OrderItemService;
 import com.nadiannis.order_service.service.OrderService;
 import com.nadiannis.order_service.utils.OrderStatus;
 import com.nadiannis.order_service.utils.PaymentMethod;
@@ -60,7 +57,7 @@ public class OrderControllerTests {
 
         orderItemReqDto = OrderItemReqDto.builder()
                 .productId(1L)
-                .price(100000F)
+                .price(100000.0)
                 .quantity(10)
                 .build();
         orderReqDto = OrderReqDto.builder()
@@ -71,15 +68,15 @@ public class OrderControllerTests {
                 .orderItems(List.of(orderItemReqDto))
                 .build();
         statusUpdateReqDto = StatusUpdateReqDto.builder().orderStatus(OrderStatus.COMPLETED.toString()).build();
-        orderItemResDto1 = OrderItemResDto.builder().id(1L).orderId(1L).productId(1L).price(100000F).quantity(10).build();
-        orderItemResDto2 = OrderItemResDto.builder().id(2L).orderId(2L).productId(1L).price(100000F).quantity(5).build();
+        orderItemResDto1 = OrderItemResDto.builder().id(1L).orderId(1L).productId(1L).price(100000.0).quantity(10).build();
+        orderItemResDto2 = OrderItemResDto.builder().id(2L).orderId(2L).productId(1L).price(100000.0).quantity(5).build();
         orderResDto1 = OrderResDto.builder()
                 .id(1L)
                 .paymentMethod(PaymentMethod.CASH.toString())
                 .billingAddress("Bekasi")
                 .shippingAddress("Jakarta")
                 .orderStatus(OrderStatus.CREATED.toString())
-                .totalAmount(1000000F)
+                .totalAmount(1000000.0)
                 .customerId(1L)
                 .orderDate(LocalDateTime.now())
                 .orderItems(List.of(orderItemResDto1))
@@ -90,7 +87,7 @@ public class OrderControllerTests {
                 .billingAddress("Bandung")
                 .shippingAddress("Semarang")
                 .orderStatus(OrderStatus.COMPLETED.toString())
-                .totalAmount(500000F)
+                .totalAmount(500000.0)
                 .customerId(2L)
                 .orderDate(LocalDateTime.now())
                 .orderItems(List.of(orderItemResDto2))
@@ -123,7 +120,7 @@ public class OrderControllerTests {
     // public Mono<ResponseEntity<?>> add(@Valid @RequestBody OrderReqDto body)
     @Test
     public void OrderController_Add_ReturnOrderResDto() {
-        Float totalAmount = orderReqDto.getOrderItems().get(0).getPrice() * orderReqDto.getOrderItems().get(0).getQuantity();
+        Double totalAmount = orderReqDto.getOrderItems().get(0).getPrice() * orderReqDto.getOrderItems().get(0).getQuantity();
         when(orderService.add(any(OrderReqDto.class))).thenReturn(Mono.just(orderResDto1));
 
         webTestClient.post().uri("/api/v1/orders")

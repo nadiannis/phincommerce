@@ -54,7 +54,7 @@ public class OrderServiceTests {
     void setUp() {
         orderItemReqDto = OrderItemReqDto.builder()
                 .productId(1L)
-                .price(100000F)
+                .price(100000.0)
                 .quantity(10)
                 .build();
         orderReqDto = OrderReqDto.builder()
@@ -65,15 +65,15 @@ public class OrderServiceTests {
                 .orderItems(List.of(orderItemReqDto))
                 .build();
         statusUpdateReqDto = StatusUpdateReqDto.builder().orderStatus(OrderStatus.COMPLETED.toString()).build();
-        orderItem1 = OrderItem.builder().id(1L).orderId(1L).productId(1L).price(100000F).quantity(10).build();
-        orderItem2 = OrderItem.builder().id(2L).orderId(2L).productId(1L).price(100000F).quantity(5).build();
+        orderItem1 = OrderItem.builder().id(1L).orderId(1L).productId(1L).price(100000.0).quantity(10).build();
+        orderItem2 = OrderItem.builder().id(2L).orderId(2L).productId(1L).price(100000.0).quantity(5).build();
         order1 = Order.builder()
                 .id(1L)
                 .paymentMethod(PaymentMethod.CASH.toString())
                 .billingAddress("Bekasi")
                 .shippingAddress("Jakarta")
                 .orderStatus(OrderStatus.CREATED.toString())
-                .totalAmount(1000000F)
+                .totalAmount(1000000.0)
                 .customerId(1L)
                 .orderDate(LocalDateTime.now())
                 .build();
@@ -83,7 +83,7 @@ public class OrderServiceTests {
                 .billingAddress("Bandung")
                 .shippingAddress("Semarang")
                 .orderStatus(OrderStatus.COMPLETED.toString())
-                .totalAmount(500000F)
+                .totalAmount(500000.0)
                 .customerId(2L)
                 .orderDate(LocalDateTime.now())
                 .build();
@@ -114,7 +114,7 @@ public class OrderServiceTests {
     // Mono<OrderResDto> add(OrderReqDto orderReqDto)
     @Test
     public void OrderService_Add_SaveAndReturnOrderResDto() {
-        Float totalAmount = orderReqDto.getOrderItems().get(0).getPrice() * orderReqDto.getOrderItems().get(0).getQuantity();
+        Double totalAmount = orderReqDto.getOrderItems().get(0).getPrice() * orderReqDto.getOrderItems().get(0).getQuantity();
         when(orderRepository.save(any(Order.class))).thenReturn(Mono.just(order1));
         when(orderItemRepository.saveAll(anyList())).thenReturn(Flux.just(orderItem1));
         when(kafkaTemplate.send(anyString(), any(Object.class))).thenReturn(null);

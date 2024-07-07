@@ -1,7 +1,6 @@
 package com.nadiannis.order_service.service;
 
 import com.nadiannis.common.dto.order.OrderItemResDto;
-import com.nadiannis.order_service.entity.Order;
 import com.nadiannis.order_service.entity.OrderItem;
 import com.nadiannis.order_service.repository.OrderItemRepository;
 import org.assertj.core.api.Assertions;
@@ -33,8 +32,8 @@ public class OrderItemServiceTests {
 
     @BeforeEach
     void setUp() {
-        orderItem1 = OrderItem.builder().id(1L).orderId(1L).productId(1L).price(10000F).quantity(4).build();
-        orderItem2 = OrderItem.builder().id(2L).orderId(1L).productId(2L).price(20000F).quantity(2).build();
+        orderItem1 = OrderItem.builder().id(1L).orderId(1L).productId(1L).price(10000.0).quantity(4).build();
+        orderItem2 = OrderItem.builder().id(2L).orderId(1L).productId(2L).price(20000.0).quantity(2).build();
     }
 
     // Flux<OrderItemResDto> getAll()

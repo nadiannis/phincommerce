@@ -29,7 +29,7 @@ public class OrderRepositoryTests {
                 .billingAddress("Bekasi")
                 .shippingAddress("Jakarta")
                 .orderStatus("CREATED")
-                .totalAmount(100000F)
+                .totalAmount(100000.0)
                 .customerId(1L)
                 .build();
         order2 = Order.builder()
@@ -37,7 +37,7 @@ public class OrderRepositoryTests {
                 .billingAddress("Bandung")
                 .shippingAddress("Semarang")
                 .orderStatus("COMPLETED")
-                .totalAmount(200000F)
+                .totalAmount(200000.0)
                 .customerId(2L)
                 .build();
 

@@ -28,7 +28,7 @@ public class Order {
 
     private String orderStatus;
 
-    private Float totalAmount;
+    private Double totalAmount;
 
     private Long customerId;
 

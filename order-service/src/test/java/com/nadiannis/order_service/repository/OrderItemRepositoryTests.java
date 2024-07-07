@@ -33,13 +33,13 @@ public class OrderItemRepositoryTests {
         orderItem1 = OrderItem.builder()
                 .orderId(1L)
                 .productId(1L)
-                .price(10000F)
+                .price(10000.0)
                 .quantity(10)
                 .build();
         orderItem2 = OrderItem.builder()
                 .orderId(1L)
                 .productId(2L)
-                .price(20000F)
+                .price(20000.0)
                 .quantity(20)
                 .build();
         order = Order.builder()
@@ -47,7 +47,7 @@ public class OrderItemRepositoryTests {
                 .billingAddress("Bekasi")
                 .shippingAddress("Jakarta")
                 .orderStatus("CREATED")
-                .totalAmount(100000F)
+                .totalAmount(100000.0)
                 .customerId(1L)
                 .build();
 
