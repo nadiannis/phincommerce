@@ -19,7 +19,7 @@ public class TransactionDetailResDto {
     @JsonProperty(value = "order_id")
     private Long orderId;
 
-    private Float amount;
+    private Double amount;
 
     private String mode;
 

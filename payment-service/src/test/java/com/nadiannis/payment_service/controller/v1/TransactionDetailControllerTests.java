@@ -4,7 +4,6 @@ import com.nadiannis.common.dto.transactiondetail.TransactionDetailAddReqDto;
 import com.nadiannis.common.dto.transactiondetail.TransactionDetailResDto;
 import com.nadiannis.common.utils.Mode;
 import com.nadiannis.common.utils.TransactionDetailStatus;
-import com.nadiannis.payment_service.dto.BalanceReqDto;
 import com.nadiannis.payment_service.dto.TransactionDetailUpdateReqDto;
 import com.nadiannis.payment_service.service.TransactionDetailService;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,12 +53,12 @@ public class TransactionDetailControllerTests {
         transactionDetailAddReqDto = TransactionDetailAddReqDto.builder()
                 .orderId(1L)
                 .customerId(1L)
-                .amount(100000F)
+                .amount(100000.0)
                 .mode(Mode.CASH.toString())
                 .build();
         transactionDetailUpdateReqDto = TransactionDetailUpdateReqDto.builder()
                 .orderId(2L)
-                .amount(200000F)
+                .amount(200000.0)
                 .mode(Mode.BANK_TRANSFER.toString())
                 .status(TransactionDetailStatus.REJECTED.toString())
                 .referenceNumber(UUID.randomUUID().toString())
@@ -67,7 +66,7 @@ public class TransactionDetailControllerTests {
         transactionDetailResDto1 = TransactionDetailResDto.builder()
                 .id(1L)
                 .orderId(1L)
-                .amount(100000F)
+                .amount(100000.0)
                 .mode(Mode.CASH.toString())
                 .status(TransactionDetailStatus.APPROVED.toString())
                 .referenceNumber(UUID.randomUUID().toString())
@@ -76,7 +75,7 @@ public class TransactionDetailControllerTests {
         transactionDetailResDto2 = TransactionDetailResDto.builder()
                 .id(2L)
                 .orderId(2L)
-                .amount(200000F)
+                .amount(200000.0)
                 .mode(Mode.BANK_TRANSFER.toString())
                 .status(TransactionDetailStatus.REJECTED.toString())
                 .referenceNumber(UUID.randomUUID().toString())

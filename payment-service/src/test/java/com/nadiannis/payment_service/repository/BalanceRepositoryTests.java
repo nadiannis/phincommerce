@@ -25,11 +25,11 @@ public class BalanceRepositoryTests {
     @BeforeEach
     void setUp() {
         balance1 = Balance.builder()
-                .amount(1000000F)
+                .amount(1000000.0)
                 .customerId(1L)
                 .build();
         balance2 = Balance.builder()
-                .amount(2000000F)
+                .amount(2000000.0)
                 .customerId(2L)
                 .build();
 

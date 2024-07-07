@@ -48,7 +48,7 @@ public class TransactionDetailServiceTests {
         transactionDetail1 = TransactionDetail.builder()
                 .id(1L)
                 .orderId(1L)
-                .amount(100000F)
+                .amount(100000.0)
                 .mode(Mode.CASH.toString())
                 .status(TransactionDetailStatus.APPROVED.toString())
                 .referenceNumber(UUID.randomUUID().toString())
@@ -56,7 +56,7 @@ public class TransactionDetailServiceTests {
         transactionDetail2 = TransactionDetail.builder()
                 .id(2L)
                 .orderId(2L)
-                .amount(200000F)
+                .amount(200000.0)
                 .mode(Mode.BANK_TRANSFER.toString())
                 .status(TransactionDetailStatus.REJECTED.toString())
                 .referenceNumber(UUID.randomUUID().toString())
@@ -64,17 +64,17 @@ public class TransactionDetailServiceTests {
         transactionDetailAddReqDto = TransactionDetailAddReqDto.builder()
                 .orderId(1L)
                 .customerId(1L)
-                .amount(100000F)
+                .amount(100000.0)
                 .mode(Mode.CASH.toString())
                 .build();
         transactionDetailUpdateReqDto = TransactionDetailUpdateReqDto.builder()
                 .orderId(1L)
-                .amount(100000F)
+                .amount(100000.0)
                 .mode(Mode.CASH.toString())
                 .status(TransactionDetailStatus.APPROVED.toString())
                 .referenceNumber(UUID.randomUUID().toString())
                 .build();
-        balanceResDto = BalanceResDto.builder().id(1L).amount(1000000F).customerId(1L).build();
+        balanceResDto = BalanceResDto.builder().id(1L).amount(1000000.0).customerId(1L).build();
     }
 
     // Flux<TransactionDetailResDto> getAll()

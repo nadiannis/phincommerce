@@ -26,7 +26,7 @@ public class TransactionDetailAddReqDto {
 
     @NotNull(message = "amount is required")
     @Min(value = 0, message = "amount should not be a negative number")
-    private Float amount;
+    private Double amount;
 
     @NotBlank(message = "mode is required")
     @ValidMode

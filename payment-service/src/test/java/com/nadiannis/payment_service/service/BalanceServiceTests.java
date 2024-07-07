@@ -38,11 +38,11 @@ public class BalanceServiceTests {
 
     @BeforeEach
     void setUp() {
-        balance1 = Balance.builder().id(1L).amount(1000000F).customerId(1L).build();
-        balance2 = Balance.builder().id(2L).amount(2000000F).customerId(2L).build();
-        balanceReqDto = BalanceReqDto.builder().amount(1000000F).customerId(1L).build();
-        amountUpdateReqDto1 = AmountUpdateReqDto.builder().action(AmountUpdateAction.DEBIT.toString()).amount(100000F).build();
-        amountUpdateReqDto2 = AmountUpdateReqDto.builder().action(AmountUpdateAction.CREDIT.toString()).amount(100000F).build();
+        balance1 = Balance.builder().id(1L).amount(1000000.0).customerId(1L).build();
+        balance2 = Balance.builder().id(2L).amount(2000000.0).customerId(2L).build();
+        balanceReqDto = BalanceReqDto.builder().amount(1000000.0).customerId(1L).build();
+        amountUpdateReqDto1 = AmountUpdateReqDto.builder().action(AmountUpdateAction.DEBIT.toString()).amount(100000.0).build();
+        amountUpdateReqDto2 = AmountUpdateReqDto.builder().action(AmountUpdateAction.CREDIT.toString()).amount(100000.0).build();
     }
 
     // Flux<BalanceResDto> getAll()
@@ -95,7 +95,7 @@ public class BalanceServiceTests {
     @Test
     public void BalanceService_DebitAmount_DebitAmountAndReturnBalanceResDto() {
         Long customerId = balance1.getCustomerId();
-        Float updatedAmount = balance1.getAmount() - amountUpdateReqDto1.getAmount();
+        Double updatedAmount = balance1.getAmount() - amountUpdateReqDto1.getAmount();
         when(balanceRepository.findByCustomerId(anyLong())).thenReturn(Mono.just(balance1));
         when(balanceRepository.save(any(Balance.class))).thenReturn(Mono.just(balance1));
 
@@ -112,7 +112,7 @@ public class BalanceServiceTests {
     @Test
     public void BalanceService_CreditAmount_CreditAmountAndReturnBalanceResDto() {
         Long customerId = balance1.getCustomerId();
-        Float updatedAmount = balance1.getAmount() + amountUpdateReqDto2.getAmount();
+        Double updatedAmount = balance1.getAmount() + amountUpdateReqDto2.getAmount();
         when(balanceRepository.findByCustomerId(anyLong())).thenReturn(Mono.just(balance1));
         when(balanceRepository.save(any(Balance.class))).thenReturn(Mono.just(balance1));
 

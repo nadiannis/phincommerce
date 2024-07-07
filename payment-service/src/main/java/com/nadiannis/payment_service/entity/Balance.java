@@ -17,7 +17,7 @@ public class Balance {
     @Id
     private Long id;
 
-    private Float amount;
+    private Double amount;
 
     private Long customerId;
 

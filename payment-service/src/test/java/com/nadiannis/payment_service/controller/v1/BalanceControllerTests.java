@@ -47,11 +47,11 @@ public class BalanceControllerTests {
     void setUp() {
         webTestClient = WebTestClient.bindToServer().baseUrl("http://localhost:" + port).build();
 
-        amountUpdateReqDto1 = AmountUpdateReqDto.builder().action(AmountUpdateAction.DEBIT.toString()).amount(100000F).build();
-        amountUpdateReqDto2 = AmountUpdateReqDto.builder().action(AmountUpdateAction.CREDIT.toString()).amount(100000F).build();
-        balanceReqDto = BalanceReqDto.builder().amount(1000000F).customerId(1L).build();
-        balanceResDto1 = BalanceResDto.builder().id(1L).amount(1000000F).customerId(1L).build();
-        balanceResDto2 = BalanceResDto.builder().id(2L).amount(2000000F).customerId(2L).build();
+        amountUpdateReqDto1 = AmountUpdateReqDto.builder().action(AmountUpdateAction.DEBIT.toString()).amount(100000.0).build();
+        amountUpdateReqDto2 = AmountUpdateReqDto.builder().action(AmountUpdateAction.CREDIT.toString()).amount(100000.0).build();
+        balanceReqDto = BalanceReqDto.builder().amount(1000000.0).customerId(1L).build();
+        balanceResDto1 = BalanceResDto.builder().id(1L).amount(1000000.0).customerId(1L).build();
+        balanceResDto2 = BalanceResDto.builder().id(2L).amount(2000000.0).customerId(2L).build();
     }
 
     // @GetMapping
@@ -120,7 +120,7 @@ public class BalanceControllerTests {
     @Test
     public void BalanceController_DebitAmount_DebitAmountAndReturnBalanceResDto() {
         Long customerId = balanceResDto1.getCustomerId();
-        Float updatedAmount = balanceResDto1.getAmount() - amountUpdateReqDto1.getAmount();
+        Double updatedAmount = balanceResDto1.getAmount() - amountUpdateReqDto1.getAmount();
         balanceResDto1.setAmount(updatedAmount);
         when(balanceService.updateAmount(anyLong(), any(AmountUpdateReqDto.class))).thenReturn(Mono.just(balanceResDto1));
 
@@ -141,7 +141,7 @@ public class BalanceControllerTests {
     @Test
     public void BalanceController_CreditAmount_CreditAmountAndReturnBalanceResDto() {
         Long customerId = balanceResDto1.getCustomerId();
-        Float updatedAmount = balanceResDto1.getAmount() + amountUpdateReqDto1.getAmount();
+        Double updatedAmount = balanceResDto1.getAmount() + amountUpdateReqDto1.getAmount();
         balanceResDto1.setAmount(updatedAmount);
         when(balanceService.updateAmount(anyLong(), any(AmountUpdateReqDto.class))).thenReturn(Mono.just(balanceResDto1));
 

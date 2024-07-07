@@ -14,7 +14,7 @@ public class BalanceResDto {
 
     private Long id;
 
-    private Float amount;
+    private Double amount;
 
     @JsonProperty(value = "customer_id")
     private Long customerId;
