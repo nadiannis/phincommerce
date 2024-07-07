@@ -26,7 +26,7 @@ public class ProductRepositoryTests {
     void setUp() {
         product1 = Product.builder()
                 .name("product 1")
-                .price(100000F)
+                .price(100000.0)
                 .category("category 1")
                 .stockQuantity(100)
                 .description("description 1")
@@ -34,7 +34,7 @@ public class ProductRepositoryTests {
                 .build();
         product2 = Product.builder()
                 .name("product 2")
-                .price(200000F)
+                .price(200000.0)
                 .category("category 2")
                 .stockQuantity(200)
                 .description("description 2")

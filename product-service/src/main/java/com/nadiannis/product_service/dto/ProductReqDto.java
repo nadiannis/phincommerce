@@ -20,7 +20,7 @@ public class ProductReqDto {
 
     @NotNull(message = "price is required")
     @Min(value = 0, message = "price should not be a negative number")
-    private Float price;
+    private Double price;
 
     @NotBlank(message = "category is required")
     private String category;
