@@ -46,7 +46,7 @@ public class OrchestratorService {
             System.out.println("ORDER_CREATED (deduct the product): " + messageDto);
 
             Flux.fromIterable(messageDto.getPayload().getOrderItems())
-                    .flatMap(orderItem -> deductProduct(orderItem))
+                    .flatMap(orderItem -> checkProductAvailability(orderItem))
                     .collectList()
                     .flatMap(results -> {
                         if (results.contains(false)) {
@@ -54,18 +54,61 @@ public class OrchestratorService {
                             sendOrderMessage(messageDto, "PRODUCT_DEDUCT_FAILED");
                             return Mono.empty();
                         } else {
-                            System.out.println("PRODUCT_DEDUCTED (process to payment)");
-                            return processPayment(messageDto);
+                            return deductProducts(messageDto);
                         }
                     })
                     .subscribe();
         }
     }
 
-    private Mono<Boolean> deductProduct(OrderItemResDto orderItemResDto) {
+    private Mono<Boolean> checkProductAvailability(OrderItemResDto orderItemResDto) {
+        return webClientProduct.get()
+                .uri("/api/v1/products/{id}", orderItemResDto.getProductId())
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<SuccessResponse<ProductResDto>>() {})
+                .map(response -> {
+                    ProductResDto product = response.getData();
+                    return product.getStockQuantity() >= orderItemResDto.getQuantity();
+                })
+                .onErrorResume(error -> Mono.just(false));
+    }
+
+    private Mono<Void> deductProducts(MessageDto messageDto) {
+        return Flux.fromIterable(messageDto.getPayload().getOrderItems())
+                .flatMap(orderItem -> deductProductQuantity(orderItem))
+                .collectList()
+                .flatMap(deductResults -> {
+                    if (deductResults.contains(false)) {
+                        System.out.println("PRODUCT_DEDUCT_FAILED (update the order status)");
+                        sendOrderMessage(messageDto, "PRODUCT_DEDUCT_FAILED");
+                        return Mono.empty();
+                    } else {
+                        System.out.println("PRODUCT_DEDUCTED (process to payment)");
+                        return processPayment(messageDto);
+                    }
+                });
+    }
+
+    private Mono<Boolean> deductProductQuantity(OrderItemResDto orderItemResDto) {
         return webClientProduct.patch()
                 .uri("/api/v1/products/{id}/quantities", orderItemResDto.getProductId())
                 .bodyValue(new QuantityUpdateReqDto("DEDUCT", orderItemResDto.getQuantity()))
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<SuccessResponse<ProductResDto>>() {})
+                .map(productResDto -> true)
+                .onErrorResume(error -> Mono.just(false));
+    }
+
+    private Mono<Void> addProducts(List<OrderItemResDto> orderItemResDtoList) {
+        return Flux.fromIterable(orderItemResDtoList)
+                .flatMap(orderItem -> addProductQuantity(orderItem))
+                .then();
+    }
+
+    private Mono<Boolean> addProductQuantity(OrderItemResDto orderItemResDto) {
+        return webClientProduct.patch()
+                .uri("/api/v1/products/{id}/quantities", orderItemResDto.getProductId())
+                .bodyValue(new QuantityUpdateReqDto("ADD", orderItemResDto.getQuantity()))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<SuccessResponse<ProductResDto>>() {})
                 .map(productResDto -> true)
@@ -99,22 +142,6 @@ public class OrchestratorService {
                     }
                     return Mono.empty();
                 });
-    }
-
-    private Mono<Void> addProducts(List<OrderItemResDto> orderItemResDtoList) {
-        return Flux.fromIterable(orderItemResDtoList)
-                .flatMap(orderItem -> addProductQuantity(orderItem))
-                .then();
-    }
-
-    private Mono<Boolean> addProductQuantity(OrderItemResDto orderItemResDto) {
-        return webClientProduct.patch()
-                .uri("/api/v1/products/{id}/quantities", orderItemResDto.getProductId())
-                .bodyValue(new QuantityUpdateReqDto("ADD", orderItemResDto.getQuantity()))
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<SuccessResponse<ProductResDto>>() {})
-                .map(productResDto -> true)
-                .onErrorResume(error -> Mono.just(false));
     }
 
     private void sendOrderMessage(MessageDto messageDto, String status) {
