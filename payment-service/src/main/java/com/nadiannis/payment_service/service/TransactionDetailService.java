@@ -3,6 +3,8 @@ package com.nadiannis.payment_service.service;
 import com.nadiannis.common.dto.balance.AmountUpdateReqDto;
 import com.nadiannis.common.dto.transactiondetail.TransactionDetailAddReqDto;
 import com.nadiannis.common.dto.transactiondetail.TransactionDetailResDto;
+import com.nadiannis.common.utils.AmountUpdateAction;
+import com.nadiannis.common.utils.TransactionDetailStatus;
 import com.nadiannis.payment_service.dto.TransactionDetailUpdateReqDto;
 import com.nadiannis.payment_service.entity.TransactionDetail;
 import com.nadiannis.common.exception.ResourceNotFoundException;
@@ -35,18 +37,18 @@ public class TransactionDetailService {
         return balanceService.updateAmount(
                 transactionDetailAddReqDto.getCustomerId(),
                 AmountUpdateReqDto.builder()
-                        .action("DEBIT")
+                        .action(AmountUpdateAction.DEBIT.toString())
                         .amount(transactionDetailAddReqDto.getAmount())
                         .build()
         ).flatMap(balanceResDto -> {
             TransactionDetail transactionDetail = mapFromAddReqDtoToEntity(transactionDetailAddReqDto);
             transactionDetail.setReferenceNumber(UUID.randomUUID().toString());
-            transactionDetail.setStatus("APPROVED");
+            transactionDetail.setStatus(TransactionDetailStatus.APPROVED.toString());
             return repository.save(transactionDetail).map(newTransactionDetail -> mapToResDto(newTransactionDetail));
         }).onErrorResume(error -> {
             TransactionDetail transactionDetail = mapFromAddReqDtoToEntity(transactionDetailAddReqDto);
             transactionDetail.setReferenceNumber(UUID.randomUUID().toString());
-            transactionDetail.setStatus("REJECTED");
+            transactionDetail.setStatus(TransactionDetailStatus.REJECTED.toString());
             return repository.save(transactionDetail).map(newTransactionDetail -> mapToResDto(newTransactionDetail));
         });
     }

@@ -1,5 +1,7 @@
 package com.nadiannis.payment_service.repository;
 
+import com.nadiannis.common.utils.Mode;
+import com.nadiannis.common.utils.TransactionDetailStatus;
 import com.nadiannis.payment_service.entity.TransactionDetail;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,15 +30,15 @@ public class TransactionDetailRepositoryTests {
         transactionDetail1 = TransactionDetail.builder()
                 .orderId(1L)
                 .amount(100000.0)
-                .mode("CASH")
-                .status("APPROVED")
+                .mode(Mode.CASH.toString())
+                .status(TransactionDetailStatus.APPROVED.toString())
                 .referenceNumber(UUID.randomUUID().toString())
                 .build();
         transactionDetail2 = TransactionDetail.builder()
                 .orderId(2L)
                 .amount(200000.0)
-                .mode("BANK_TRANSFER")
-                .status("REJECTED")
+                .mode(Mode.BANK_TRANSFER.toString())
+                .status(TransactionDetailStatus.REJECTED.toString())
                 .referenceNumber(UUID.randomUUID().toString())
                 .build();
 

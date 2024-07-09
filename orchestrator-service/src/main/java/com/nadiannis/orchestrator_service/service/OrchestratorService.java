@@ -8,6 +8,8 @@ import com.nadiannis.common.dto.product.ProductResDto;
 import com.nadiannis.common.dto.product.QuantityUpdateReqDto;
 import com.nadiannis.common.dto.transactiondetail.TransactionDetailAddReqDto;
 import com.nadiannis.common.dto.transactiondetail.TransactionDetailResDto;
+import com.nadiannis.common.utils.QuantityUpdateAction;
+import com.nadiannis.common.utils.TransactionDetailStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -92,7 +94,7 @@ public class OrchestratorService {
     private Mono<Boolean> deductProductQuantity(OrderItemResDto orderItemResDto) {
         return webClientProduct.patch()
                 .uri("/api/v1/products/{id}/quantities", orderItemResDto.getProductId())
-                .bodyValue(new QuantityUpdateReqDto("DEDUCT", orderItemResDto.getQuantity()))
+                .bodyValue(new QuantityUpdateReqDto(QuantityUpdateAction.DEDUCT.toString(), orderItemResDto.getQuantity()))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<SuccessResponse<ProductResDto>>() {})
                 .map(productResDto -> true)
@@ -108,7 +110,7 @@ public class OrchestratorService {
     private Mono<Boolean> addProductQuantity(OrderItemResDto orderItemResDto) {
         return webClientProduct.patch()
                 .uri("/api/v1/products/{id}/quantities", orderItemResDto.getProductId())
-                .bodyValue(new QuantityUpdateReqDto("ADD", orderItemResDto.getQuantity()))
+                .bodyValue(new QuantityUpdateReqDto(QuantityUpdateAction.ADD.toString(), orderItemResDto.getQuantity()))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<SuccessResponse<ProductResDto>>() {})
                 .map(productResDto -> true)
@@ -128,11 +130,11 @@ public class OrchestratorService {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<SuccessResponse<TransactionDetailResDto>>() {})
                 .flatMap(resDto -> {
-                    if (resDto.getData().getStatus().equals("APPROVED")) {
+                    if (resDto.getData().getStatus().equals(TransactionDetailStatus.APPROVED.toString())) {
                         System.out.println("PAYMENT_APPROVED (update the order status): " + resDto.getData());
                         sendOrderMessage(messageDto, "PAYMENT_APPROVED");
                         return Mono.empty();
-                    } else if (resDto.getData().getStatus().equals("REJECTED")) {
+                    } else if (resDto.getData().getStatus().equals(TransactionDetailStatus.REJECTED.toString())) {
                         System.out.println("PAYMENT_REJECTED (add the product): " + resDto.getData());
                         return addProducts(messageDto.getPayload().getOrderItems())
                                 .then(Mono.fromRunnable(() -> {
